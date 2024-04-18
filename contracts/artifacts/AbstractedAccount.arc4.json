@@ -27,7 +27,7 @@
       "args": [
         {
           "name": "newAdmin",
-          "type": "account",
+          "type": "address",
           "desc": "The new admin"
         }
       ],
@@ -76,22 +76,8 @@
       "args": [
         {
           "name": "plugin",
-          "type": "application",
+          "type": "uint64",
           "desc": "The app to rekey to"
-        }
-      ],
-      "returns": {
-        "type": "void"
-      }
-    },
-    {
-      "name": "arc58_rekeyToNamedPlugin",
-      "desc": "Temporarily rekey to a named plugin app address",
-      "args": [
-        {
-          "name": "name",
-          "type": "string",
-          "desc": "The name of the plugin to rekey to"
         }
       ],
       "returns": {
@@ -104,7 +90,7 @@
       "args": [
         {
           "name": "app",
-          "type": "application",
+          "type": "uint64",
           "desc": "The app to add"
         },
         {
@@ -128,53 +114,12 @@
       "args": [
         {
           "name": "app",
-          "type": "application",
+          "type": "uint64",
           "desc": "The app to remove"
         },
         {
           "name": "allowedCaller",
           "type": "address"
-        }
-      ],
-      "returns": {
-        "type": "void"
-      }
-    },
-    {
-      "name": "arc58_addNamedPlugin",
-      "desc": "Add a named plugin",
-      "args": [
-        {
-          "name": "name",
-          "type": "string",
-          "desc": "The plugin name"
-        },
-        {
-          "name": "app",
-          "type": "application",
-          "desc": "The plugin app"
-        },
-        {
-          "name": "allowedCaller",
-          "type": "address"
-        },
-        {
-          "name": "end",
-          "type": "uint64"
-        }
-      ],
-      "returns": {
-        "type": "void"
-      }
-    },
-    {
-      "name": "arc58_removeNamedPlugin",
-      "desc": "Remove a named plugin",
-      "args": [
-        {
-          "name": "name",
-          "type": "string",
-          "desc": "The plugin name"
         }
       ],
       "returns": {

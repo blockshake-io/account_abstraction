@@ -1,0 +1,56 @@
+{
+  "name": "RecoveryPlugin",
+  "desc": "",
+  "methods": [
+    {
+      "name": "createApplication",
+      "args": [
+        {
+          "name": "controlledAccount",
+          "type": "address"
+        },
+        {
+          "name": "recoveryAccount",
+          "type": "address"
+        },
+        {
+          "name": "graceRounds",
+          "type": "uint64"
+        }
+      ],
+      "returns": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "initiateRecovery",
+      "args": [],
+      "returns": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "abortRecovery",
+      "args": [],
+      "returns": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "recover",
+      "args": [
+        {
+          "name": "abstractedAccountApp",
+          "type": "uint64"
+        },
+        {
+          "name": "controlledAccount",
+          "type": "address"
+        }
+      ],
+      "returns": {
+        "type": "void"
+      }
+    }
+  ]
+}

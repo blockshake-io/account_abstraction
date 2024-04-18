@@ -1,6 +1,6 @@
 import { Contract } from '@algorandfoundation/tealscript';
 
-type PluginsKey = { application: Application; allowedCaller: Address };
+type PluginsKey = { application: AppID; allowedCaller: Address };
 
 export class AbstractedAccount extends Contract {
   /** Target AVM 10 */
@@ -18,11 +18,6 @@ export class AbstractedAccount extends Contract {
    * is the timestamp when the permission expires for the address to call the app for your account.
    */
   plugins = BoxMap<PluginsKey, uint64>({ prefix: 'p' });
-
-  /**
-   * Plugins that have been given a name for discoverability
-   */
-  namedPlugins = BoxMap<bytes, PluginsKey>({ prefix: 'n' });
 
   /**
    * Ensure that by the end of the group the abstracted account has control of its address
@@ -85,8 +80,15 @@ export class AbstractedAccount extends Contract {
    *
    * @param newAdmin The new admin
    */
-  arc58_changeAdmin(newAdmin: Account): void {
-    verifyTxn(this.txn, { sender: this.admin.value });
+  arc58_changeAdmin(newAdmin: Address): void {
+    verifyTxn(this.txn, {
+      sender: {
+        includedIn: [
+          this.admin.value,
+          this.controlledAddress.value.authAddr,
+        ]
+      }
+    });
     this.admin.value = newAdmin;
   }
 
@@ -118,7 +120,6 @@ export class AbstractedAccount extends Contract {
       sender: this.controlledAddress.value,
       receiver: addr,
       rekeyTo: addr,
-      note: 'rekeying abstracted account',
     });
 
     if (flash) this.verifyRekeyToAbstractedAccount();
@@ -129,7 +130,7 @@ export class AbstractedAccount extends Contract {
    *
    * @param plugin The app to rekey to
    */
-  arc58_rekeyToPlugin(plugin: Application): void {
+  arc58_rekeyToPlugin(plugin: AppID): void {
     const globalKey: PluginsKey = { application: plugin, allowedCaller: globals.zeroAddress };
 
     // If this plugin is not approved globally, then it must be approved for this address
@@ -142,19 +143,9 @@ export class AbstractedAccount extends Contract {
       sender: this.controlledAddress.value,
       receiver: this.controlledAddress.value,
       rekeyTo: plugin.address,
-      note: 'rekeying to plugin app',
     });
 
     this.verifyRekeyToAbstractedAccount();
-  }
-
-  /**
-   * Temporarily rekey to a named plugin app address
-   *
-   * @param name The name of the plugin to rekey to
-   */
-  arc58_rekeyToNamedPlugin(name: string): void {
-    this.arc58_rekeyToPlugin(this.namedPlugins(name).value.application);
   }
 
   /**
@@ -165,7 +156,7 @@ export class AbstractedAccount extends Contract {
    * or the global zero address for all addresses
    * @param end The timestamp when the permission expires
    */
-  arc58_addPlugin(app: Application, allowedCaller: Address, end: uint64): void {
+  arc58_addPlugin(app: AppID, allowedCaller: Address, end: uint64): void {
     verifyTxn(this.txn, { sender: this.admin.value });
     const key: PluginsKey = { application: app, allowedCaller: allowedCaller };
     this.plugins(key).value = end;
@@ -176,38 +167,10 @@ export class AbstractedAccount extends Contract {
    *
    * @param app The app to remove
    */
-  arc58_removePlugin(app: Application, allowedCaller: Address): void {
+  arc58_removePlugin(app: AppID, allowedCaller: Address): void {
     verifyTxn(this.txn, { sender: this.admin.value });
 
     const key: PluginsKey = { application: app, allowedCaller: allowedCaller };
     this.plugins(key).delete();
-  }
-
-  /**
-   * Add a named plugin
-   *
-   * @param app The plugin app
-   * @param name The plugin name
-   */
-  arc58_addNamedPlugin(name: string, app: Application, allowedCaller: Address, end: uint64): void {
-    verifyTxn(this.txn, { sender: this.admin.value });
-    assert(!this.namedPlugins(name).exists);
-
-    const key: PluginsKey = { application: app, allowedCaller: allowedCaller };
-    this.namedPlugins(name).value = key;
-    this.plugins(key).value = end;
-  }
-
-  /**
-   * Remove a named plugin
-   *
-   * @param name The plugin name
-   */
-  arc58_removeNamedPlugin(name: string): void {
-    verifyTxn(this.txn, { sender: this.admin.value });
-
-    const app = this.namedPlugins(name).value;
-    this.namedPlugins(name).delete();
-    this.plugins(app).delete();
   }
 }
