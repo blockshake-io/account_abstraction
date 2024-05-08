@@ -1,0 +1,96 @@
+{
+  "name": "SpendingLimitPlugin",
+  "desc": "",
+  "methods": [
+    {
+      "name": "createApplication",
+      "args": [
+        {
+          "name": "abstractedAccountApp",
+          "type": "uint64"
+        },
+        {
+          "name": "timePeriod",
+          "type": "uint64"
+        }
+      ],
+      "returns": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "_getApp",
+      "args": [],
+      "returns": {
+        "type": "uint64"
+      }
+    },
+    {
+      "name": "_getAppAdmin",
+      "args": [],
+      "returns": {
+        "type": "address"
+      }
+    },
+    {
+      "name": "setSpendingLimit",
+      "args": [
+        {
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "name": "assetId",
+          "type": "uint64"
+        },
+        {
+          "name": "limit",
+          "type": "uint64"
+        }
+      ],
+      "returns": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "removeSpendingLimit",
+      "args": [
+        {
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "name": "assetId",
+          "type": "uint64"
+        }
+      ],
+      "returns": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "spend",
+      "args": [
+        {
+          "name": "controlledAccount",
+          "type": "address"
+        },
+        {
+          "name": "receiver",
+          "type": "address"
+        },
+        {
+          "name": "assetId",
+          "type": "uint64"
+        },
+        {
+          "name": "amount",
+          "type": "uint64"
+        }
+      ],
+      "returns": {
+        "type": "void"
+      }
+    }
+  ]
+}
