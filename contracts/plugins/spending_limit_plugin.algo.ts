@@ -47,10 +47,21 @@ export class SpendingLimitPlugin extends Contract {
 
   removeSpendingLimit(account: Address, assetId: uint64) {
     assert(this.txn.sender == this._getAppAdmin());
+
+    // delete box, free up ALGO-MBR
+    const preMbr = globals.currentApplicationAddress.minBalance;
     this.spendingLimits({
       account: account,
       asset: assetId,
     }).delete();
+    const postMbr = globals.currentApplicationAddress.minBalance;
+
+    // send MBR to admin account
+    sendPayment({
+      sender: this.app.address,
+      receiver: this.txn.sender,
+      amount: preMbr - postMbr,
+    });
   }
 
   spend(

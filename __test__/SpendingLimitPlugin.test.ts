@@ -479,7 +479,8 @@ describe('Spending Limit Plugin Program', () => {
                 Buffer.from(algosdk.encodeUint64(asset)),
               ])
             )
-          ]
+          ],
+          sendParams: { fee: algokit.microAlgos(2000), },
         })
         .execute();
     });

@@ -50,7 +50,7 @@ export class AbstractedAccount extends Contract {
   }
 
   /**
-   * What the value of this.address.value.authAddr should be when this.address
+   * What the value of this.address.value.authAddr should be when this.controlledAddress
    * is able to be controlled by this app. It will either be this.app.address or zeroAddress
    */
   private getAuthAddr(): Address {
